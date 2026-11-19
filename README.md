@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lehi Kitchen Design
 
-## Getting Started
+Next.js 16 (App Router, TypeScript, Tailwind v4) lead-generation site for a Lehi, Utah kitchen remodeler.
 
-First, run the development server:
+**107 indexable pages**: home, 29 service pages, 59 location pages (Lehi neighborhoods, cities, regional hubs, ZIP page), 9 cost guides, plus index, about, contact, gallery, estimator, legal pages. Every page has a lead form.
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Before launch — replace placeholders
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Edit `src/lib/site.ts`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `phone` / `phoneHref` — currently a fictional 555 number
+- `email`, `address`, `hours`, `social`, `license`
+- Set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) to the production domain so canonicals, sitemap and JSON-LD use it.
 
-## Learn More
+Also review location/neighborhood copy (`src/data/locations-*.ts`) for local accuracy, and add real reviews / project photos when available (no fake ratings are published in the schema).
 
-To learn more about Next.js, take a look at the following resources:
+## Leads
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`POST /api/leads` validates, rate-limits (honeypot + time check), and:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. appends to `data/leads.jsonl` (git-ignored; works on any Node host with a writable disk), and
+2. forwards to `LEAD_WEBHOOK_URL` if set (Zapier / Make / GoHighLevel / CRM).
 
-## Deploy on Vercel
+On serverless hosts (e.g. Vercel) the disk is read-only — set `LEAD_WEBHOOK_URL` there.
+Submitting fires `dataLayer` event `generate_lead` and redirects to `/thank-you` (noindex) for conversion tracking.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Path | Purpose |
+| --- | --- |
+| `src/data/services.ts` | 29 services (content, FAQs, pricing, related) |
+| `src/data/locations-*.ts` | 59 location pages across 5 tiers |
+| `src/data/guides.ts` | 9 cost / planning guides |
+| `src/lib/schema.ts` | JSON-LD builders (Organization, GeneralContractor, WebSite, WebPage, Service, Article, FAQPage, BreadcrumbList, ItemList) |
+| `src/lib/seo.ts` | Metadata helper (title/description/canonical/OG/Twitter/geo) |
+| `src/components/LeadFormClient.tsx` | Lead form |
+| `src/components/CostEstimatorClient.tsx` | Interactive cost calculator with lead capture |
+
+URL structure: `/services/[slug]`, `/locations/[city-ut]`, `/locations/lehi/[neighborhood]`, `/locations/[city-ut]/[neighborhood]`, `/guides/[slug]`.
+
+## Images
+
+AI-generated with the Gemini image API (`scripts/generate-images.mjs`, reads `GEMINI_API_KEY` from `.env.local`).
+Images are labelled as illustrative concept imagery on the site. Re-run for missing images with `node scripts/generate-images.mjs`; `--force` regenerates, `--only=name1,name2` targets specific files.
+
+## Audit
+
+With a production server running (`npm start -- -p 3100`): `node scripts/audit.mjs http://localhost:3100` checks every sitemap URL for one H1, title/description length and uniqueness, canonical, form presence, JSON-LD validity and image alt text.
