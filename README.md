@@ -28,7 +28,7 @@ Also review location/neighborhood copy (`src/data/locations-*.ts`) for local acc
 
 1. appends to `data/leads.jsonl` (git-ignored; works on any Node host with a writable disk), and
 2. forwards to `LEAD_WEBHOOK_URL` if set (Zapier / Make / GoHighLevel / CRM), and
-3. emails it to `LEAD_TO_EMAIL` (default production@builtrightdigital.com) through Google Workspace SMTP when `SMTP_USER` + `SMTP_PASS` (a Google app password) are set. Reply-To is the customer's email.
+3. emails it to `LEAD_TO_EMAIL` (default ppl@builtrightdigital.com) through Google Workspace SMTP when `SMTP_USER` + `SMTP_PASS` (a Google app password) are set. Reply-To is the customer's email.
 
 On serverless hosts (e.g. Vercel) the disk is read-only — set the SMTP variables (and/or `LEAD_WEBHOOK_URL`) in the Vercel project.
 Submitting fires `dataLayer` event `generate_lead` and redirects to `/thank-you` (noindex) for conversion tracking.
