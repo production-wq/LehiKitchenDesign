@@ -4,7 +4,7 @@ export const SITE = {
   name: "Lehi Kitchen Design",
   legalName: "Lehi Kitchen Design LLC",
   tagline: "Kitchen Remodeling Contractors in Lehi, Utah",
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://www.lehikitchendesign.com").replace(/\/$/, ""),
   // TODO: replace with the real business phone and email before launch.
   phone: "(801) 555-0142",
   phoneHref: "+18015550142",
