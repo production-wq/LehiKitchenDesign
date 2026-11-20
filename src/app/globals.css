@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #11201c;
-  --color-forest: #1b3830;
-  --color-forest-800: #234a40;
-  --color-forest-100: #e3ece8;
-  --color-brass: #b98a3e;
-  --color-brass-600: #9f7432;
-  --color-brass-100: #f5ead6;
-  --color-cream: #faf6ee;
-  --color-sand: #efe6d5;
-  --color-stone: #56625c;
-  --color-line: #e3dccd;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --shadow-card: 0 1px 2px rgb(17 32 28 / 0.05), 0 12px 32px -12px rgb(17 32 28 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(17 32 28 / 0.06), 0 22px 44px -16px rgb(17 32 28 / 0.3);
+  --color-ink: #141c24;
+  --color-forest: #1d2b3a;
+  --color-forest-800: #2b3f55;
+  --color-forest-100: #e7ecf2;
+  --color-brass: #c49a5a;
+  --color-brass-600: #8c6a35;
+  --color-brass-100: #f5ecdd;
+  --color-cream: #fbf8f3;
+  --color-sand: #f1ebe1;
+  --color-stone: #5c6672;
+  --color-line: #e7e0d4;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --shadow-card: 0 1px 2px rgb(20 28 36 / 0.05), 0 12px 32px -12px rgb(20 28 36 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(20 28 36 / 0.06), 0 22px 44px -16px rgb(20 28 36 / 0.3);
 }
 
 html {
@@ -31,10 +31,13 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+@layer base {
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
+  font-weight: 600;
   text-wrap: balance;
+}
 }
 
 ::selection {
@@ -75,14 +78,14 @@ h1, h2, h3, h4 {
   cursor: pointer;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--color-brass); color: #1a1409; box-shadow: 0 8px 20px -8px rgb(185 138 62 / 0.7); }
-.btn-primary:hover { background: #c9983f; }
+.btn-primary { background: var(--color-brass); color: #1a140a; box-shadow: 0 8px 20px -8px rgb(196 154 90 / 0.7); }
+.btn-primary:hover { background: #d0a86a; }
 .btn-dark { background: var(--color-forest); color: white; }
 .btn-dark:hover { background: var(--color-forest-800); }
 .btn-ghost { border: 1.5px solid currentColor; }
 .btn-ghost:hover { background: rgb(255 255 255 / 0.1); }
 
-.prose-lk p { margin-bottom: 1.1rem; line-height: 1.8; color: #2d3a35; }
+.prose-lk p { margin-bottom: 1.1rem; line-height: 1.8; color: #2e3742; }
 .prose-lk a { color: var(--color-forest-800); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--color-brass); }
 .prose-lk a:hover { color: var(--color-brass-600); }
 

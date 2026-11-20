@@ -83,7 +83,7 @@ export default function CostEstimatorClient({
           <label htmlFor="est-size" className="flex items-baseline justify-between font-semibold text-forest">
             Kitchen size <span className="font-display text-2xl">{size} sq ft</span>
           </label>
-          <input id="est-size" type="range" min={80} max={450} step={10} value={size} onChange={(e) => setSize(+e.target.value)} className="mt-3 w-full accent-[#b98a3e]" />
+          <input id="est-size" type="range" min={80} max={450} step={10} value={size} onChange={(e) => setSize(+e.target.value)} className="mt-3 w-full accent-[#c49a5a]" />
           <div className="flex justify-between text-xs text-stone"><span>Small (80)</span><span>Average (180)</span><span>Large (450)</span></div>
         </div>
 

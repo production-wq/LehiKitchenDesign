@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { CloseIcon, MenuIcon, PhoneIcon } from "./Icons";
 
@@ -21,9 +22,12 @@ export default function MobileMenu({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
+  // Close on navigation (adjust state during render instead of in an effect).
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -44,7 +48,7 @@ export default function MobileMenu({
         <MenuIcon />
       </button>
 
-      {open && (
+      {open && createPortal(
         <div className="fixed inset-0 z-[60] overflow-y-auto bg-cream" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="container-x flex h-[68px] items-center justify-between">
             <span className="font-display text-xl font-semibold text-forest">Menu</span>
@@ -84,7 +88,8 @@ export default function MobileMenu({
 
             <a href={`tel:${phoneHref}`} className="btn btn-dark mt-8 w-full"><PhoneIcon width={18} height={18} /> Call {phone}</a>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

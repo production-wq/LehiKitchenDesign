@@ -170,7 +170,7 @@ export default function LeadFormClient({
         {compact && extraMessage && <input type="hidden" name="message" value={extraMessage} />}
 
         <label className="flex items-start gap-2.5 text-[12px] leading-snug text-stone">
-          <input type="checkbox" name="consent" required className="mt-0.5 h-4 w-4 shrink-0 accent-[#b98a3e]" />
+          <input type="checkbox" name="consent" required className="mt-0.5 h-4 w-4 shrink-0 accent-[#c49a5a]" />
           <span>
             I agree to be contacted by Lehi Kitchen Design by phone, text or email about my project. Message and data rates may apply; consent is not a condition of purchase. See our{" "}
             <a href="/privacy" className="underline">Privacy Policy</a>.

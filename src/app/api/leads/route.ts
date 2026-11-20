@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { appendFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,46 @@ function limited(ip: string) {
   arr.push(now);
   hits.set(ip, arr);
   return arr.length > 6;
+}
+
+const LEAD_TO = process.env.LEAD_TO_EMAIL || "production@buildrightdigital.com";
+
+const esc = (v: string) => v.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+
+// Send the lead via Google Workspace SMTP. Needs SMTP_USER + SMTP_PASS (a Google app password).
+async function emailLead(lead: Record<string, unknown> & { name: string; email: string; service: string; location: string }) {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass) {
+    console.warn("[leads] SMTP_USER / SMTP_PASS not set — skipping email");
+    return false;
+  }
+  const transport = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: Number(process.env.SMTP_PORT || 465) === 465,
+    auth: { user, pass },
+  });
+  const rows: [string, unknown][] = [
+    ["Name", lead.name], ["Phone", lead.phone], ["Email", lead.email], ["ZIP", lead.zip],
+    ["Project", lead.service], ["Timeline", lead.timeline], ["Budget", lead.budget], ["Location", lead.location],
+    ["Message", lead.message], ["Page", lead.page], ["Source", lead.source], ["Referrer", lead.referrer],
+    ...Object.entries((lead.utm as Record<string, string>) ?? {}),
+    ["Received", lead.receivedAt], ["IP", lead.ip],
+  ];
+  const filled = rows.filter(([, v]) => v !== "" && v != null).map(([k, v]) => [k, String(v)] as const);
+  const subjectBits = [lead.service, lead.location].filter(Boolean).join(" · ");
+  await transport.sendMail({
+    from: { name: "Lehi Kitchen Design Website", address: process.env.SMTP_FROM || user },
+    to: LEAD_TO,
+    replyTo: { name: lead.name, address: lead.email },
+    subject: `New lead: ${lead.name}${subjectBits ? ` — ${subjectBits}` : ""}`,
+    text: filled.map(([k, v]) => `${k}: ${v}`).join("\n"),
+    html: `<h2 style="font-family:Georgia,serif;color:#1d2b3a">New website lead</h2><table cellpadding="6" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px">${filled
+      .map(([k, v]) => `<tr><td style="color:#5c6672;vertical-align:top;white-space:nowrap"><b>${esc(k)}</b></td><td style="white-space:pre-wrap">${esc(v)}</td></tr>`)
+      .join("")}</table>`,
+  });
+  return true;
 }
 
 const clean = (v: unknown, max = 400) => (typeof v === "string" ? v.replace(/[\u0000-\u001f]+/g, " ").trim().slice(0, max) : "");
@@ -87,6 +128,13 @@ export async function POST(req: Request) {
     } catch (err) {
       console.warn("[leads] webhook failed:", (err as Error).message);
     }
+  }
+
+  // 3) Email to the production inbox (Google Workspace)
+  try {
+    if (await emailLead(lead)) stored = true;
+  } catch (err) {
+    console.error("[leads] email failed:", (err as Error).message);
   }
 
   console.log(`[lead] ${lead.name} | ${lead.phone} | ${lead.service} | ${lead.page}`);

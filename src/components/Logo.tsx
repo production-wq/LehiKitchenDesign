@@ -1,15 +1,31 @@
+export function LogoMark({ light = false, size = 40 }: { light?: boolean; size?: number }) {
+  const bg = light ? "#fbf8f3" : "#1d2b3a";
+  const fg = light ? "#1d2b3a" : "#fbf8f3";
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="shrink-0">
+      <rect width="64" height="64" rx="16" fill={bg} />
+      <rect x="5" y="5" width="54" height="54" rx="12" fill="none" stroke="#c49a5a" strokeOpacity="0.45" strokeWidth="1.2" />
+      <path d="M19 47V30a13 13 0 0 1 26 0v17" fill="none" stroke="#c49a5a" strokeWidth="3.2" strokeLinecap="round" />
+      <path d="M32 30v15" stroke={fg} strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="28.5" cy="38" r="1.6" fill={fg} />
+      <circle cx="35.5" cy="38" r="1.6" fill={fg} />
+      <path d="M14 47h36" stroke="#c49a5a" strokeWidth="3.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function Logo({ light = false }: { light?: boolean }) {
   return (
-    <span className="flex items-center gap-2.5">
-      <svg width="38" height="38" viewBox="0 0 64 64" aria-hidden="true" className="shrink-0">
-        <rect width="64" height="64" rx="14" fill={light ? "#faf6ee" : "#1b3830"} />
-        <path d="M14 46V26l18-12 18 12v20" fill="none" stroke="#b98a3e" strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round" />
-        <rect x="22" y="30" width="20" height="16" rx="1.5" fill="none" stroke={light ? "#1b3830" : "#faf6ee"} strokeWidth="3" />
-        <path d="M22 38h20M32 30v16" stroke={light ? "#1b3830" : "#faf6ee"} strokeWidth="2.5" />
-      </svg>
-      <span className="leading-none">
-        <span className={`block font-display text-[1.2rem] font-semibold tracking-tight ${light ? "text-white" : "text-forest"}`}>Lehi Kitchen Design</span>
-        <span className={`mt-0.5 block text-[10px] font-bold uppercase tracking-[0.2em] ${light ? "text-brass" : "text-brass-600"}`}>Remodeling · Design · Build</span>
+    <span className="flex items-center gap-3">
+      <LogoMark light={light} />
+      <span className="flex flex-col leading-none">
+        <span className={`flex items-center gap-2 font-sans text-[10.5px] font-bold uppercase tracking-[0.34em] ${light ? "text-brass" : "text-brass-600"}`}>
+          Lehi
+          <span aria-hidden="true" className={`h-px w-8 ${light ? "bg-brass/60" : "bg-brass/70"}`} />
+        </span>
+        <span className={`mt-1 font-display text-[1.32rem] font-semibold tracking-[-0.005em] ${light ? "text-white" : "text-forest"}`}>
+          Kitchen Design
+        </span>
       </span>
     </span>
   );
