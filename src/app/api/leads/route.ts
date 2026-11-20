@@ -15,7 +15,7 @@ function limited(ip: string) {
   return arr.length > 6;
 }
 
-const LEAD_TO = process.env.LEAD_TO_EMAIL || "production@buildrightdigital.com";
+const LEAD_TO = process.env.LEAD_TO_EMAIL || "production@builtrightdigital.com";
 
 const esc = (v: string) => v.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
